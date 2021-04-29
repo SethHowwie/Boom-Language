@@ -1,0 +1,7 @@
+#lang racket
+; Flie Name: tests.rkt
+; Author: Seth H.
+; Description: File holding test cases for the boom languages interpreter file
+
+(require "syntax-procs.rkt")
+(require "interpreter.rkt")

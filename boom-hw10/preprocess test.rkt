@@ -1,0 +1,26 @@
+#lang racket
+
+
+(require "syntax-procs.rkt")
+
+(define preprocess
+  (lambda (sugared-exp)
+    (cond ((number-exp? sugared-exp)
+           sugared-exp)
+          ((binary? sugared-exp)
+           (if (eq? (binary->op sugared-exp) '@)
+               (make-binary (make-binary(preprocess (binary->arg1 sugared-exp))
+                                        '+
+                                        (preprocess (binary->arg2 sugared-exp)))
+                            '/
+                            2)
+               (make-binary (preprocess (binary->arg1 sugared-exp))
+                            (binary->op sugared-exp)
+                            (preprocess (binary->arg2 sugared-exp)))))
+          ((unary? sugared-exp)
+           (if (eq? (unary->op sugared-exp) 'sq)
+               (make-binary (preprocess (unary->arg sugared-exp))
+                            '*
+                            (preprocess (unary->arg sugared-exp)))
+               (make-unary (unary->op sugared-exp)
+                           (preprocess (unary->arg sugared-exp))))))))

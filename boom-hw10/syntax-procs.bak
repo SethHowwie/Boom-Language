@@ -1,0 +1,72 @@
+#lang racket
+;; File Name: Syntax-procs.rkt
+;; Author: Seth Howard
+;; Description: Syntax procedures for the Boom language
+
+(provide boom-exp?
+         number-exp?
+         unary?        make-unary       unary->arg     unary->op
+         binary?       make-binary      binary->arg1   binary->op   binary->arg2)
+
+;;--------General Type Predicate---------
+
+(define boom-exp?
+  (lambda (arg)
+    (or (number? arg)
+        (unary? arg)
+        (binary? arg))))
+
+;; ------- Numbers? -------
+(define number-exp?
+  (lambda (number-exp)
+    (and (number? number-exp)
+         (exact? number-exp))))
+
+
+(define make-number identity)
+(define number->val identity)
+
+
+;; ------ Unary ------
+
+(define unary?
+  (lambda (exp)
+    (if (number-exp? exp)
+        #f
+        (if (eq? (length exp) 2)
+            (or (eq? (first exp) '-)
+                (eq? (first exp) 'sq))
+            #f))))
+            
+
+(define make-unary
+  (lambda (op exp)
+    (list op exp)))
+
+(define unary->arg second)
+(define unary->op first)
+
+;; ------ Binary ------
+
+(define binary?
+  (lambda (exp)
+    (if (number-exp? exp)
+        #f
+        (if (eq? (length exp) 3)
+            (or (eq? (second exp) '+)
+                (eq? (second exp) '-)
+                (eq? (second exp) '*)
+                (eq? (second exp) '/)
+                (eq? (second exp) '%)
+                (eq? (second exp) '@))
+            #f))))
+
+(define make-binary
+  (lambda (arg1 op arg2)
+    (list arg1 op arg2)))
+
+(define binary->arg1 first)
+(define binary->op second)
+(define binary->arg2 third)
+
+  

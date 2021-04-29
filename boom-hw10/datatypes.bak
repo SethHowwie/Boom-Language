@@ -1,0 +1,10 @@
+#lang racket
+(define make-bindings
+  (lambda ()
+    (list)))
+
+(define bind
+  (lambda (make-bindings)
+    (lambda (var val)
+      ( var val)
+      
